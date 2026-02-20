@@ -1,15 +1,24 @@
 import logging
 import json
 import types
+from pathlib import Path
+
 from force_regression.config.dataconfig import DataConfig
 
 import force_regression.utils.functions as fn
+# Project root is three levels up from this file:
+# force_regression/utils/configuration.py -> force_regression/utils/ -> force_regression/ -> project root
+_PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 
 def load_project_configuration(config_file):
     """
     Load the project configuration from a JSON file.
+    Relative paths are resolved from the project root, not the CWD.
     """
-    with open(config_file, 'r', encoding='utf-8') as file:
+    config_path = Path(config_file)
+    if not config_path.is_absolute():
+        config_path = _PROJECT_ROOT / config_path
+    with open(config_path, 'r', encoding='utf-8') as file:
         config = json.load(file)
         data_root_dir = config['root_dir']
         results_root_dir =  config['root_results_dir']

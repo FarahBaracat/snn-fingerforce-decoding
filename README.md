@@ -47,6 +47,11 @@ conda activate snn_test
 
 **Step 3 — Install the submodules and the main package in editable mode**
 
+> **Note:** `neurobench` depends on `llvmlite` (via `numba`), which has no pre-built wheel on some platforms and fails to compile from source via pip. Install it via conda first to use the pre-built binary:
+> ```bash
+> conda install -c conda-forge llvmlite numba
+> ```
+
 ```bash
 pip install -e ./snntorch
 pip install -e ./neurobench
