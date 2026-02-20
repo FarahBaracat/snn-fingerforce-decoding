@@ -43,7 +43,7 @@ git submodule update --init --recursive
 
 ```bash
 conda env create -f environment.yml
-conda activate snn_test
+conda activate snn_force
 ```
 
 **Step 3 — Install the submodules and the main package in editable mode**
