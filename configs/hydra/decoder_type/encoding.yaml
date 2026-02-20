@@ -1,4 +1,5 @@
 topology: "encoding_shallow_leaky"
+lr: 1e-3
 
 use_file_data: True # if True load pre-generated preprocessed EMG and force dataframes from file, else generate it
 

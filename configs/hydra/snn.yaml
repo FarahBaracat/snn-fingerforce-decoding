@@ -6,11 +6,11 @@ defaults:
   - _self_
 
 task:
-  exp_dir: 'flex'
-  subject: 'S1'
+  exp_dir: 'ext'
+  subject: 'S2'
   # noise_mode: 'omission'
   # percent_omission: 50
 training:
   num_iter: 100
 decoder_type:
-  use_file_data: False
+  use_file_data: True

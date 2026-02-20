@@ -7,7 +7,7 @@ parameters:
   training.num_iter:
     value: 100
   task.exp_dir:
-    values: [flex]
+    values: [flex, ext]
   
   # training.torch_seed:
   #   values: [90, 9, 15 ,64 ,28, 89, 29, 8 ,73 , 0]

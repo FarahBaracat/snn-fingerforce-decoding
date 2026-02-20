@@ -3,7 +3,7 @@ wandb:
   entity: farahbaracat
   project: iemg_snn
 
-save_fig: True
+save_fig: False
 save_metrics: True
 log_ts_freq: 10
 enable_profiling: False
