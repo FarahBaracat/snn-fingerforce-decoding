@@ -2,6 +2,7 @@
 
 Finger force regression from intramuscular EMG motor unit (MU) spike trains using Spiking Neural Networks (SNNs) and Recurrent Neural Networks (RNNs). The repository accompanies the manuscript and supports three main experiments: (i) SNN on clean MU spike trains, (ii) SNN on noisy MU spike trains, and (iii) SNN on encoded surface EMG spike trains.
 
+Decomposition was carried using [A Particle Swarm Optimised Independence Estimator](https://github.com/AgneGris/swarm-contrastive-decomposition.git).
 <p align="center">
   <img src="decoding_pipelines.png" alt="drawing" width="500"/>
 </p>
