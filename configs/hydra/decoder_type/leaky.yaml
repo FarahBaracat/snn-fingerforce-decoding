@@ -1,0 +1,39 @@
+# Shallow Leaky Integrate-and-Fire decoder (SHALLOW_LEAKY topology)
+topology: "shallow_leaky"
+
+lr: 10e-3
+
+use_file_data: True
+use_inf_network: True
+
+# Decoding layer time constants
+tau_syn: 10e-3
+tau_mem: 80e-3
+
+# Filter
+first_filter_tau: 80e-3
+second_filter_tau: 0 # not used 
+
+# Weight initialisation
+w_init_dist: "uniform"
+w_init: [-0.1, 0.1]
+w_init_mean: 0
+w_init_std: 0.005
+bias_init: [-0.001, 0.001]
+
+# Learning flags
+learn_tau_mem: False
+learn_tau_syn: False
+
+# Adaptive leaky (disabled for standard leaky)
+use_aleaky: False
+threshold_tau_adapt: 100e-3
+threshold_scale_adapt: 1
+
+# Post-processing low-pass filter on output
+post_process_filt: True
+post_filt_cutoff: 2
+post_filt_order: 4
+
+# Logging frequency (test evaluation every N epochs)
+log_ts_freq: 5

@@ -1,0 +1,44 @@
+# Shallow Spiking decoder with double filter (SHALLOW_SPIKING_DOUBLE_FILTER topology)
+topology: "shallow_spiking_double_filter"
+
+lr: 1e-3
+
+use_file_data: True
+use_inf_network: True
+
+# Decoding layer time constants and threshold
+tau_syn: 10e-3
+tau_mem: 30e-3
+spk_threshold: 0.045
+
+# Dual-filter time constants
+first_filter_tau: 50e-3
+second_filter_tau: 0.08
+
+# Fixed gain on filter output
+w_fixed_filt: 1
+
+# Weight initialisation
+w_init_dist: "uniform"
+w_init: [-0.01, 0.01]
+w_init_mean: 0
+w_init_std: 0.005
+bias_init: [-0.001, 0.001]
+
+# Learning flags
+learn_threshold: False
+learn_tau_mem: True
+learn_tau_syn: False
+
+# Adaptive leaky (disabled for standard spiking)
+use_aleaky: False
+threshold_tau_adapt: 100e-3
+threshold_scale_adapt: 1
+
+# Post-processing low-pass filter on output
+post_process_filt: True
+post_filt_cutoff: 2
+post_filt_order: 4
+
+# Logging frequency (test evaluation every N epochs)
+log_ts_freq: 10

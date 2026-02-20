@@ -1,0 +1,10 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.backends.legacy:build"
+
+[project]
+name = "force_regression"
+version = "0.1.0"
+
+[tool.setuptools.packages.find]
+where = ["."]

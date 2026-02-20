@@ -1,0 +1,13 @@
+defaults:
+  - task: task
+  - decoder_type: rnn
+  - logging: logging
+  - training: rnn
+  - _self_
+
+task:
+  exp_dir: 'flex'
+  subject: 'S1'
+training:
+  num_iter: 100
+

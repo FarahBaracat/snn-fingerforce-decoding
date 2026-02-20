@@ -1,0 +1,25 @@
+program: scripts/snn_on_encodedEMG.py
+method: grid
+parameters:
+  task.subject:
+    values: [S1]
+  task.exp_dir:
+    values: [flex]
+  training.num_iter:
+    value: 1
+  decoder_type.threshold_tau_adapt:
+    value: 100e-3
+  decoder_type.threshold_scale_adapt:
+    values: [0 ,0.1, 0.5, 1.0]
+  decoder_type.enc_spk_threshold:
+    values: [[0.01,0.01,0.01],[0.04,0.04,0.04], [0.08,0.08,0.08], [0.1,0.1,0.1], [0.2,0.2,0.2], [0.4,0.4,0.4]]
+  decoder_type.use_aleaky:
+    value: True
+  # training.torch_seed:
+  #   values: [90, 9, 15 ,64 ,28, 89, 29, 8 ,73 , 0]
+
+command:
+    - ${env:PYTHON,/opt/anaconda3/envs/snn_test/bin/python}
+    - ${interpreter}
+    - ${program}
+    - ${args_no_hyphens}

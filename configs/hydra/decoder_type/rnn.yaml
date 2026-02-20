@@ -1,0 +1,22 @@
+# RNN Model Configuration
+topology: "RNN"
+rnn_type: "vanilla"  # vanilla | lstm | gru
+
+# RNN architecture
+rnn_hidden_size: 5
+rnn_num_layers: 1
+rnn_bias: False
+project_output_with_fc: False
+
+# Input processing
+normalize_output: True
+exp_decay_tau: 10e-3
+exp_kernel_size: 5
+
+# Post processing of predictions
+post_process_filt: True
+post_filt_cutoff: 2
+post_filt_order: 4
+
+# Data loading
+use_file_data: True

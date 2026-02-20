@@ -1,0 +1,20 @@
+program: scripts/snn_on_noisy_mu.py
+method: grid
+parameters:
+  task.subject:
+    values: [S1]
+  task.exp_dir:
+    values: [flex, ext]
+  training.num_iter:
+    value: 1
+  task.noise_mode:
+    value: misattribution
+  task.percent_misattribution:
+    values: [15, 20, 50]
+
+
+command:
+    - ${env:PYTHON,/opt/anaconda3/envs/snn_test/bin/python}
+    - ${interpreter}
+    - ${program}
+    - ${args_no_hyphens}

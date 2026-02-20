@@ -1,0 +1,38 @@
+topology: "encoding_shallow_leaky"
+
+use_file_data: True # if True load pre-generated preprocessed EMG and force dataframes from file, else generate it
+
+use_inf_network: True
+# Subject-specific encoder parameters resolved from subjects_enc config group
+enc_tau_mem: [20e-3, 20e-3, 20e-3] #${subjects_enc.${task.subject}.enc_tau_mem}
+enc_spk_threshold: [0.1, 0.1, 0.1] #${subjects_enc.${task.subject}.enc_spk_threshold}
+learn_enc_threshold: False
+use_aleaky: True
+threshold_tau_adapt: 100e-3 # time constant for the adaptive threshold variable in adaptive leaky IF neurons
+threshold_scale_adapt: 0.1 # scale factor for the adaptive threshold variable in adaptive leaky IF neurons
+
+w_fixed_enc: 1 # this is the gain to app lied to the input iEMG
+tau_syn: 10e-3 
+tau_mem: 80e-3 
+first_filter_tau: 0.2
+second_filter_tau: 0
+
+w_init_dist: "uniform"
+w_init: [-0.01, 0.01]
+w_init_mean: 0
+w_init_std: 0.005
+bias_init: [-0.001, 0.001]
+
+learn_tau_mem: False
+learn_tau_syn: False
+set_electrode_specific_parameters: True
+clip_channels: True  # boolean to clip the channels prior to encoding
+add_recurrent: False
+w_recurrent: 1
+post_process_filt: True
+post_filt_cutoff: 2
+post_filt_order: 4
+
+
+
+rect_type: 'full'      # full | half. The type of rectifier to be used in the encoding layer

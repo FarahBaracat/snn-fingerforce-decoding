@@ -1,0 +1,9 @@
+{
+    "root_dir": "data/HDiEMG_mu_decomposition",
+    "root_results_dir":  "results",
+    "subject_mappings": {
+        "AK": "S1",
+        "SA": "S2"},
+    "entity":"farahbaracat"
+}
+

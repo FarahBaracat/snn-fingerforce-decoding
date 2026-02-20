@@ -1,0 +1,13 @@
+noise_torch_seed: 100
+torch_seed: 90
+
+train_rep_binwidth: 27
+inf_rep_binwidth: 27
+rep_on_rep: '2on1'
+lr: 0.01
+dt: 10e-3
+train_with_cv: True
+num_iter: 100
+train_batch_size: 16
+test_batch_size: 1
+log_ts_freq: 5

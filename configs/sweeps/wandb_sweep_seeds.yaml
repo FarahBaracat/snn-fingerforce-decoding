@@ -1,0 +1,20 @@
+# program: scripts/snn_on_mu.py or scripts/rnn_on_mu.py
+program: scripts/snn_on_mu.py
+method: grid
+parameters:
+  task.subject:
+    values: [S1, S2]
+  training.num_iter:
+    value: 100
+  task.exp_dir:
+    values: [flex]
+  
+  # training.torch_seed:
+  #   values: [90, 9, 15 ,64 ,28, 89, 29, 8 ,73 , 0]
+
+
+command:
+    - ${env:PYTHON,/opt/anaconda3/envs/snn_test/bin/python}
+    - ${interpreter}
+    - ${program}
+    - ${args_no_hyphens}

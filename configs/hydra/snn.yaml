@@ -1,0 +1,16 @@
+defaults:
+  - task: task
+  - decoder_type: leaky  # switch to: leaky | spiking | encoding
+  - logging: logging
+  - training: snn
+  - _self_
+
+task:
+  exp_dir: 'flex'
+  subject: 'S1'
+  # noise_mode: 'omission'
+  # percent_omission: 50
+training:
+  num_iter: 100
+decoder_type:
+  use_file_data: False

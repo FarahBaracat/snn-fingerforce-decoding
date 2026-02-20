@@ -1,0 +1,6 @@
+[submodule "snntorch"]
+	path = snntorch
+	url = https://github.com/FarahBaracat/snntorch.git
+[submodule "neurobench"]
+	path = neurobench
+	url = https://github.com/FarahBaracat/neurobench.git

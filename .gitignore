@@ -1,0 +1,37 @@
+
+.ipynb_checkpoints
+**/.ipynb_checkpoints/*
+**/__pycache__
+*.icloud
+
+# figures and data folders
+figures
+snn_data
+emg_reg_data
+**/generated_notebooks
+notebooks/data
+data/
+!force_regression/data/
+
+# wandb runs
+wandb
+sweep-*
+
+# profiling logs
+logs/
+trace.json
+
+#Hydra outputs
+outputs/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Environments
+.vscode
+.idea
+
+.gitattributes
+
+data/
+results/

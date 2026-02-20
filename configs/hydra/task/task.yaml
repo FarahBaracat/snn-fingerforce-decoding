@@ -1,0 +1,16 @@
+mvc: [15]
+subject: 'S2'
+exp_dir: 'flex'
+train_fing_id: [0, 1, 2, 3, 4]
+percent_omission: 0
+percent_addition: 0
+jitter_std: 5e-3
+percent_misattribution: 0
+rand_indices_ratio: 0.1
+noise_mode: null  # None| 'omission' | 'addition' | 'misattribution' | 'location'
+segment_hold : False
+select_dir : True
+shuffle_fingers_seed : 10
+split_rep: True
+split_type: "with_overlap"
+overlap_perc: 0.5
