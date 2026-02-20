@@ -39,11 +39,11 @@ def generate_data_paths(data_config, mvcs_string:str):
     instead of loading the data and preprocessing from scratch.
     """
     mu_df_file = os.path.join(data_config.snn_temp_data_path,
-                              f'mu_df_sorted_{mvcs_string}_{data_config.decomp_dir.split("/")[-1]}_hold_{data_config.segment_hold}.pkl')
+                              f'mu_df_sorted_{mvcs_string}_hold_{data_config.segment_hold}.pkl')
     force_df_file = os.path.join(data_config.snn_temp_data_path,
-                                 f'multioutput_force_df_{mvcs_string}_{data_config.decomp_dir.split("/")[-1]}_hold_{data_config.segment_hold}.pkl')
+                                 f'multioutput_force_df_{mvcs_string}_hold_{data_config.segment_hold}.pkl')
     data_config_file = os.path.join(
-        data_config.snn_temp_data_path, f'data_config_{mvcs_string}_{data_config.decomp_dir.split("/")[-1]}_hold_{data_config.segment_hold}.pkl')
+        data_config.snn_temp_data_path, f'data_config_{mvcs_string}_hold_{data_config.segment_hold}.pkl')
 
     return mu_df_file,force_df_file,data_config_file
 

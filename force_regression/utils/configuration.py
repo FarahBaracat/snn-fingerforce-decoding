@@ -20,8 +20,8 @@ def load_project_configuration(config_file):
         config_path = _PROJECT_ROOT / config_path
     with open(config_path, 'r', encoding='utf-8') as file:
         config = json.load(file)
-        data_root_dir = config['root_dir']
-        results_root_dir =  config['root_results_dir']
+        data_root_dir = str(_PROJECT_ROOT / config['root_dir'])
+        results_root_dir = str(_PROJECT_ROOT / config['root_results_dir'])
         subject_name_encoding = config['subject_mappings']
         wandb_entity = config['entity']
         return data_root_dir, results_root_dir, subject_name_encoding, wandb_entity
