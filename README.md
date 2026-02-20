@@ -231,7 +231,7 @@ force_regression_snn/
 
 ## 📁 Output Files
 
-Results are written to `root_results_dir` (set in `configs/config.json`), organised by subject and model type.
+Results are written to `root_results_dir/output_files` (set in `configs/config.json`), organised by subject and decoder type.
 
 | Prefix | Contents |
 |---|---|
@@ -239,7 +239,6 @@ Results are written to `root_results_dir` (set in `configs/config.json`), organi
 | `y_dict_` | Full prediction dictionary (train/test, raw/smoothed) |
 | `metrics_df_` | Performance metrics (RMSE, MAE, R²) |
 | `trained_models_` | Fitted linear regression coefficients |
-| `trparams_df_` | Trained SNN parameters per fold |
 | `rec_rep_` | SNN state variables (membrane voltage, synaptic current, spikes) |
 
 **SNN filename conventions:**
