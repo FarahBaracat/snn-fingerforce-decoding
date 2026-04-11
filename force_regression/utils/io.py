@@ -26,7 +26,8 @@ def create_reg_results_and_figs_dirs(data_config):
 def save_to_source_data(source_data_file_path, df, sheet_name):
     try:
         mode = 'a' if os.path.exists(source_data_file_path) else 'w'
-        with pd.ExcelWriter(source_data_file_path, mode=mode, if_sheet_exists='replace') as writer:
+        kwargs = {'if_sheet_exists': 'replace'} if mode == 'a' else {}
+        with pd.ExcelWriter(source_data_file_path, mode=mode, **kwargs) as writer:
             df.to_excel(writer, sheet_name=sheet_name, index=False)
             # Auto-fit column widths
             worksheet = writer.sheets[sheet_name]
