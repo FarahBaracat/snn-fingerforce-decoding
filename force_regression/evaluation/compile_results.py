@@ -11,6 +11,7 @@ import pickle as pkl
 import matplotlib.pyplot as plt
 from force_regression.config.dataconfig import DataConfig
 import force_regression.utils.functions as fn
+import force_regression.utils.io as io
 from configs.constants import *
 
 
@@ -953,6 +954,8 @@ def plot_pred_of_models_target_only_different_topologies(data_config: DataConfig
                                                          pred_force_alpha=0.8, pred_linestyle='dashed',
                                                          show_topology=[SHALLOW_LEAKY, SHALLOW_SPIKING_DOUBLE_FILTER],
                                                          show_custom_annotation:bool=False,
+                                                         source_data_path:str=None,
+                                                         sheet_name:str='predictions',
                                                          ):
     """
     Plots the predicted force of the models on the target finger only.
@@ -977,6 +980,7 @@ def plot_pred_of_models_target_only_different_topologies(data_config: DataConfig
     model_names = [f"{emg_types[i].lower()} {input_types[i].lower()}" for i in range(n_models)]
     figure_labels = []
     figure_handles = []
+    source_rows = []  # collect plotted data for source file
     print(f"Comparing models:{model_names}")
     for finger in range(n_fingers):
         for m in range(n_mvcs):
@@ -1005,7 +1009,8 @@ def plot_pred_of_models_target_only_different_topologies(data_config: DataConfig
                                                            lw=2, alpha=LEGEND_ALPHA,
                                                            linestyle=pred_linestyle)])
 
-                    ax.plot(time_axis, temp_df[plot_var][mvc_fid: mvc_fid+ mvc_samples, finger],
+                    pred_slice = temp_df[plot_var][mvc_fid: mvc_fid+ mvc_samples, finger]
+                    ax.plot(time_axis, pred_slice,
                             alpha=pred_force_alpha, linestyle=pred_linestyle,
                             label=f"Filtered {fing_order[finger]}",
                             color=model_color)
@@ -1014,10 +1019,16 @@ def plot_pred_of_models_target_only_different_topologies(data_config: DataConfig
                     else:
                         ax.set_ylim([-1, temp_df[plot_var].max() + 1])
                     if i==0:
-                        ax.plot(time_axis, temp_df["y_true_test"][mvc_fid: mvc_fid + mvc_samples, finger],
+                        true_slice = temp_df["y_true_test"][mvc_fid: mvc_fid + mvc_samples, finger]
+                        ax.plot(time_axis, true_slice,
                                 alpha=true_force_alpha,
                                 label=f"True {fing_order[finger]}",
                                 color=COLORS['midnight_blue'])
+                        for t, (t_val, pred_val, true_val) in enumerate(zip(time_axis, pred_slice, true_slice)):
+                            source_rows.append({'finger': fing_order[finger],
+                                                'subject': subjects[i], 'rep': reps[i],
+                                                'model': 'baseline', 'time_s': t_val,
+                                                'predicted_force': pred_val, 'true_force': true_val})
              
                 # add custom vertical lines at 5 and 10
                 if show_custom_annotation:
@@ -1059,6 +1070,35 @@ def plot_pred_of_models_target_only_different_topologies(data_config: DataConfig
                                             figure_labels, figure_handles, mvc_samples, bin_size,
                                             stride_size,show_topology,
                                             plot_conv_true_force=True)
+
+        # Collect SNN plotted data
+        if source_data_path is not None:
+            seg_nsteps = int(bin_size / snn_dataset.dt)
+            stride_in_steps = int(bin_size * (1 - ol / 100) / snn_dataset.dt)
+            active_fingers_order = snn_dataset.active_fingers_order[reps[1]]
+            for topology_name in show_topology:
+                snn_mask = ((y_compiled_df[SUBJECT_COL] == subjects[1]) &
+                            (y_compiled_df[EMG_COL] == emg_types[1]) &
+                            (y_compiled_df[SIGN_MVC_COL] == sign_mvcs[1]) &
+                            (y_compiled_df[MVC_COL] == mvcs[1]) &
+                            (y_compiled_df[INPUT_TYPE_COL] == input_types[1]) &
+                            (y_compiled_df[TEST_ON_REP] == reps[1]) &
+                            (y_compiled_df[TOPOLOGY_COL] == topology_name))
+                snn_df = y_compiled_df[snn_mask].iloc[0]
+                arr_pointer = 0
+                start_ar = snn_dataset.segments_start[mvcs[1]]
+                for target_finger in active_fingers_order:
+                    for slice_i, _ in enumerate(start_ar):
+                        xaxis = np.arange(slice_i * stride_in_steps, slice_i * stride_in_steps + seg_nsteps)
+                        time_ax = xaxis * snn_dataset.dt
+                        pred_slice = snn_df[plot_var][arr_pointer: arr_pointer + seg_nsteps, target_finger - 1]
+                        true_slice = snn_df['y_true_test'][arr_pointer: arr_pointer + seg_nsteps, target_finger - 1]
+                        for t_val, pred_val, true_val in zip(time_ax, pred_slice, true_slice):
+                            source_rows.append({'finger': fing_order[target_finger - 1],
+                                                'subject': subjects[1], 'rep': reps[1],
+                                                'model': topology_name, 'time_s': t_val,
+                                                'predicted_force': pred_val, 'true_force': true_val})
+                        arr_pointer += seg_nsteps
   
     _ = fig.legend(handles=figure_handles, labels=figure_labels, fontsize=12,
                    loc='upper center', bbox_to_anchor=(0.5, 1.14),
@@ -1085,9 +1125,19 @@ def plot_pred_of_models_target_only_different_topologies(data_config: DataConfig
         if xlim:
             filename = f"{subjects[i]}_ypred_{mvcs[0]}_{topology_string}xlim_{xlim[0]}_{xlim[1]}_testrep_{reps[0]}_testsign_{sign_mvcs[0]}_{models_string}.png"
         else:
-            filename = f"{subjects[i]}_ypred_{mvcs[0]}_{topology_string}testrep_{reps[0]}_testsign_{sign_mvcs[0]}_alif.png"
+            filename = f"{subjects[i]}_ypred_{mvcs[0]}_{topology_string}testrep_{reps[0]}_testsign_{sign_mvcs[0]}.pdf"
         print(f"Saving figure to {filename}")
         plt.savefig(os.path.join(compiled_results_dir, filename), dpi=300, bbox_inches="tight")
+
+        if source_data_path is not None and source_rows:
+            long_df = pd.DataFrame(source_rows)
+            wide_df = long_df.pivot_table(index=['subject', 'rep', 'model', 'time_s'],
+                                          columns='finger',
+                                          values=['predicted_force', 'true_force'],
+                                          aggfunc='first')
+            wide_df.columns = [f'{val}_{fing}' for val, fing in wide_df.columns]
+            wide_df = wide_df.reset_index()
+            io.save_to_source_data(source_data_path, wide_df, sheet_name=sheet_name)
 
 
 def plot_topology_based_snn_predictions(snn_dataset, y_compiled_df, subject, emg_type,
