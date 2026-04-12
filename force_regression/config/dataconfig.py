@@ -41,7 +41,7 @@ class DataConfig:
                  root_results_dir: str = 'results',
                  # Constants
                  data_input_dir: str = r"emg_data",
-                 data_decomp_dir: str = r"decomposition", #r"data/output/decomposition",
+                 data_decomp_dir: str = r"decomposition", # for testing on all data "data/output/decomposition", for testing on subdata "decomposition"
                  decomp_dir: str = field(init=False),
                  input_dir: str = field(init=False),
                  subject: str = 'AK',
