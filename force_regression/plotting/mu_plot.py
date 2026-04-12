@@ -10,6 +10,7 @@ import matplotlib.gridspec as gridspec
 from force_regression.data.loaders.force import get_repetitions_for_task
 import force_regression.data.preprocessing.spikes as spk
 import force_regression.utils.functions as fn
+import force_regression.utils.io as io
 from force_regression.config.dataconfig import DataConfig
 from matplotlib.patches import Patch
 import matplotlib.patches as mpatches
@@ -151,7 +152,9 @@ def raster_plot_sep_rep_inset(mu_df_sorted, config, force_df,
                                max_ylim=80,
                                plot_all_forces:bool=False,
                                same_mus_color_per_task:bool=False,
-                               output_figures_dir:str=None):
+                               output_figures_dir:str=None,
+                               source_data_path:str=None,
+                               sheet_name:str=f'sample_decomposition_data'):
     """
     Plot each repetiton raster plot in a separate subplot with inset on hold
     either append MU ids to have blocks or remove the id from the axis
@@ -197,8 +200,46 @@ def raster_plot_sep_rep_inset(mu_df_sorted, config, force_df,
         fig.tight_layout()
         if save_fig:
             filename = get_filename(config, plot_common_only, filename_prefix=f'mu_force_plot_rep_{rep_id}_allforces_{plot_all_forces}')
-            fig.savefig(os.path.join(output_figures_dir, filename) , dpi=300, bbox_inches = 'tight')
+            fig.savefig(os.path.join(output_figures_dir, filename) , dpi=300, bbox_inches = 'tight', format='pdf')
             print(f"Saving figure to {filename}")
+
+            if source_data_path is not None:
+                force_cols = [c for c in force_df.columns if c.startswith('force_')]
+                spike_blocks, force_blocks = [], []
+                for fing_name in config.finger_label_map.keys():
+                    for rep_id_s in rep_list:
+                        # Spike data for this finger/rep
+                        mu_cols = [FING_NAME_COL, ELEC_NAME, CONS_MU_ID, SP_TIME]
+                        smask = (mu_df_sorted_dir[FING_NAME_COL] == fing_name) & (mu_df_sorted_dir[REP_ID] == rep_id_s - 1)
+                        spikes = mu_df_sorted_dir[smask][mu_cols].copy().reset_index(drop=True)
+                        spikes = spikes.explode(SP_TIME)
+                        spikes[SP_TIME] = spikes[SP_TIME].astype(float) / config.f_samp
+                        if rep_id_s == 2:
+                            start_time = mu_df_sorted_dir[smask][START_TIME].values[0]  # already in seconds
+                            spikes[SP_TIME] = spikes[SP_TIME] - start_time
+                        spikes.rename(columns={SP_TIME: 'spike_time_s'}, inplace=True)
+
+                        # Compute relative_plot_mu_id: replicate plot sorting (sort MUs by first spike time)
+                        first_spike = spikes.groupby(CONS_MU_ID)['spike_time_s'].min().sort_values()
+                        plot_id_map = {mu_id: i for i, mu_id in enumerate(first_spike.index)}
+                        spikes['relative_plot_mu_id'] = spikes[CONS_MU_ID].map(plot_id_map)
+                        spike_blocks.append(spikes)
+
+                io.save_to_source_data(source_data_path, pd.concat(spike_blocks, ignore_index=True),
+                                       sheet_name=sheet_name)
+
+                # Force: one wide table per rep (time_s | force_finger1 | force_finger2 | ...)
+                for rep_id_s in rep_list:
+                    rep_force = None
+                    for fing_name in config.finger_label_map.keys():
+                        fmask = ((force_df[FING_NAME_COL] == fing_name) &
+                                 (force_df[FING_DIR] == config.direction) &
+                                 (force_df[REP_ID] == rep_id_s - 1))
+                        fdf = force_df[fmask][[f'force_{fing_name}']].reset_index(drop=True)
+                        rep_force = fdf if rep_force is None else pd.concat([rep_force, fdf], axis=1)
+                    rep_force.insert(0, 'time_s', np.arange(len(rep_force)) / config.f_samp)
+                    io.save_to_source_data(source_data_path, rep_force,
+                                           sheet_name=f'{sheet_name}_force_rep{rep_id_s}')
 
 
 
@@ -377,7 +418,7 @@ def get_filename(config, plot_common_only, filename_prefix="raster_plot_reps"):
     else:
         filename_suffix = "finger"
     return os.path.join(config.figs_decomp_path, f"{filename_prefix}_{filename_suffix}_"
-                                                 f"{fn.remap_subject(config.subject, config.subj_map)}_{config.task_name()}.png")
+                                                 f"{fn.remap_subject(config.subject, config.subj_map)}_{config.task_name()}.pdf")
 
 
 def plot_heatmap(matrix_in, axis, lw=0, min_pulse_rate=None, annot=False, cbar=False, vmin=None, vmax=None,
