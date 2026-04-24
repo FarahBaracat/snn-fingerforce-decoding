@@ -1,9 +1,10 @@
 {
-    "root_dir": "/Volumes/big usb drive/HDiEMG_mu_decomposition",
-    "root_results_dir": "/Volumes/big usb drive/snn-fingerforce-decoding-results/results",
+    "root_dir": "data/HDiEMG_mu_decomposition",
+    "_root_dir_comment": "absolute alt: /Volumes/big usb drive/HDiEMG_mu_decomposition",
+    "root_results_dir": "results",
+    "_root_results_dir_comment": "absolute alt: /Volumes/big usb drive/snn-fingerforce-decoding-results/results",
     "subject_mappings": {
         "AK": "S1",
         "SA": "S2"},
     "entity":"farahbaracat"
 }
-
