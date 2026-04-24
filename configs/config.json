@@ -1,6 +1,6 @@
 {
-    "root_dir": "data/HDiEMG_mu_decomposition",
-    "root_results_dir":  "results",
+    "root_dir": "/Volumes/big usb drive/HDiEMG_mu_decomposition",
+    "root_results_dir": "/Volumes/big usb drive/snn-fingerforce-decoding-results/results",
     "subject_mappings": {
         "AK": "S1",
         "SA": "S2"},

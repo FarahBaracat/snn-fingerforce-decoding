@@ -8,11 +8,11 @@ parameters:
   training.num_iter:
     value: 100
   decoder_type.threshold_tau_adapt:
-    value: 100e-3
+    value: 0.1
   decoder_type.threshold_scale_adapt:
     values: [0.1] #[0 ,0.1, 0.5, 1.0]
   decoder_type.enc_spk_threshold:
-    values: [[0.01,0.01,0.01]] #[[0.04,0.04,0.04], [0.08,0.08,0.08], [0.1,0.1,0.1], [0.2,0.2,0.2], [0.4,0.4,0.4]]
+    values: [[0.1,0.1,0.1]] #[[0.04,0.04,0.04], [0.08,0.08,0.08], [0.1,0.1,0.1], [0.2,0.2,0.2], [0.4,0.4,0.4]]
   decoder_type.use_aleaky:
     value: True
   # training.torch_seed:
